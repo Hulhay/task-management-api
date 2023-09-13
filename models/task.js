@@ -32,6 +32,12 @@ const taskSchema = new mongoose.Schema({
   tags: {
     type: [String],
   },
+  createdAt: {
+    type: Date,
+  },
+  updatedAt: {
+    type: Date,
+  },
 });
 
 const Task = mongoose.model("Task", taskSchema);

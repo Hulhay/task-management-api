@@ -1,7 +1,7 @@
 const { buildResponse, buildPagination } = require("./response");
 const { msg, dateTimeFormat, emailFormat } = require("./constant");
 const { generateUUID, validateUUID } = require("./utils");
-const { stringToDateTime, formatDateString } = require("./time");
+const { stringToDateTime, formatDateString, now } = require("./time");
 const { generateTokens } = require("./token");
 
 module.exports = {
@@ -15,4 +15,5 @@ module.exports = {
   stringToDateTime,
   formatDateString,
   generateTokens,
+  now,
 };

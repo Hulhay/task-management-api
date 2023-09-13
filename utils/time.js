@@ -1,5 +1,9 @@
 const moment = require("moment");
 
+const now = () => {
+  return new Date(Date.now());
+};
+
 const stringToDateTime = (dateTimeString) => {
   const dateParts = dateTimeString.split(" ");
   const [datePart, timePart] = dateParts;
@@ -12,4 +16,4 @@ const formatDateString = (date, format) => {
   return moment(date).format(format);
 };
 
-module.exports = { stringToDateTime, formatDateString };
+module.exports = { stringToDateTime, formatDateString, now };

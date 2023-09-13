@@ -1,5 +1,5 @@
 const { Task } = require("../models");
-const { generateUUID, stringToDateTime } = require("../utils");
+const { generateUUID, stringToDateTime, now } = require("../utils");
 
 const insertTaskToDB = async (req) => {
   let { title, description, due_date, priority, status, tags } = req;
@@ -20,6 +20,8 @@ const insertTaskToDB = async (req) => {
     priority: priority,
     status: status,
     tags: tags,
+    createdAt: now(),
+    updatedAt: now(),
   });
 
   const response = await task.save();
@@ -43,6 +45,7 @@ const getTasksFromDB = async (params) => {
   }
 
   const tasks = await Task.find(query)
+    .sort({ createdAt: -1 })
     .skip(params.size * params.page - params.size)
     .limit(params.size);
 
@@ -57,6 +60,7 @@ const getTaskByIDFromDB = async (id) => {
 };
 
 const updateTaskDB = async (req) => {
+  req.body.updatedAt = now();
   const response = await Task.findOneAndUpdate(
     { id: req.params.id },
     { $set: req.body },

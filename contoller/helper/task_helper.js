@@ -9,6 +9,8 @@ const buildTaskResponse = (task) => {
     priority: task.priority,
     status: task.status,
     tags: task.tags,
+    created_at: formatDateString(task.createdAt, dateTimeFormat),
+    updated_at: formatDateString(task.updatedAt, dateTimeFormat),
   };
 };
 
