@@ -1,0 +1,1235 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Task Management App",
+    "description": "Kita Meraki Challenge.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth"
+    },
+    {
+      "name": "Task"
+    }
+  ],
+  "paths": {
+    "/api/v1/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Create a new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              },
+              "example": {
+                "name": "dev",
+                "email": "dev@mail.com",
+                "password": "dev12345"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success create new user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisterResponse"
+                },
+                "example": {
+                  "meta": {
+                    "code": 201,
+                    "message": "success",
+                    "pagination": null
+                  },
+                  "data": {
+                    "id": "04fe291e-7859-4485-b528-d027b1ec315d",
+                    "name": "dev",
+                    "email": "dev@mail.com"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Error validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisterResponse"
+                },
+                "example": {
+                  "meta": {
+                    "code": 422,
+                    "message": "email already exists",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error in service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisterResponse"
+                },
+                "example": {
+                  "meta": {
+                    "code": 500,
+                    "message": "failed to register",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Login user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              },
+              "example": {
+                "email": "dev@mail.com",
+                "password": "dev12345"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                },
+                "example": {
+                  "meta": {
+                    "code": 200,
+                    "message": "success",
+                    "pagination": null
+                  },
+                  "data": {
+                    "access_token": "this.Is.Token.123",
+                    "access_token_exp": "2023-09-01 17:55:31"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Email not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                },
+                "example": {
+                  "meta": {
+                    "code": 404,
+                    "message": "email not found",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Error validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                },
+                "example": {
+                  "meta": {
+                    "code": 422,
+                    "message": "password cannot be empty",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error in service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                },
+                "example": {
+                  "meta": {
+                    "code": 500,
+                    "message": "failed to login",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/logout": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Logout user",
+        "responses": {
+          "200": {
+            "description": "Success login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogoutResponse"
+                },
+                "example": {
+                  "meta": {
+                    "code": 200,
+                    "message": "success",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "meta": {
+                    "code": 401,
+                    "message": "expired token",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error in service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogoutResponse"
+                },
+                "example": {
+                  "meta": {
+                    "code": 500,
+                    "message": "failed to logout",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tasks": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Task"
+        ],
+        "summary": "Create a new task",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestNewTask"
+              },
+              "example": {
+                "title": "Task 1",
+                "description": "Description Task 1",
+                "due_date": "2023-08-31 23:59:59",
+                "priority": "high",
+                "status": "todo",
+                "tags": [
+                  "tag1"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success create new task",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseNewTask"
+                },
+                "example": {
+                  "meta": {
+                    "code": 201,
+                    "message": "success",
+                    "pagination": null
+                  },
+                  "data": {
+                    "id": "04fe291e-7859-4485-b528-d027b1ec315d",
+                    "title": "Task 1",
+                    "description": "Description Task 1",
+                    "due_date": "2023-08-31 23:59:59",
+                    "priority": "high",
+                    "status": "todo",
+                    "tags": [
+                      "tag1"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "meta": {
+                    "code": 401,
+                    "message": "expired token",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Error validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "meta": {
+                    "code": 422,
+                    "message": "title cannot be empty",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error in service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "meta": {
+                    "code": 500,
+                    "message": "failed to create new task",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Task"
+        ],
+        "summary": "Get list of task",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "number"
+            },
+            "example": 1
+          },
+          {
+            "in": "query",
+            "name": "size",
+            "schema": {
+              "type": "number"
+            },
+            "example": 10
+          },
+          {
+            "in": "query",
+            "name": "keyword",
+            "schema": {
+              "type": "string"
+            },
+            "example": "task"
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string"
+            },
+            "example": "todo"
+          },
+          {
+            "in": "query",
+            "name": "priority",
+            "schema": {
+              "type": "string"
+            },
+            "example": "high"
+          },
+          {
+            "in": "query",
+            "name": "tags",
+            "schema": {
+              "type": "string"
+            },
+            "example": "tag1,tag2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success get list of task",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseGetTasks"
+                },
+                "example": {
+                  "meta": {
+                    "code": 200,
+                    "message": "success",
+                    "pagination": {
+                      "page": 1,
+                      "size": 10,
+                      "total_page": 10,
+                      "total_data": 100
+                    }
+                  },
+                  "data": [
+                    {
+                      "id": "04fe291e-7859-4485-b528-d027b1ec315d",
+                      "title": "Task 1",
+                      "description": "Description Task 1",
+                      "due_date": "2023-08-31 23:59:59",
+                      "priority": "high",
+                      "status": "todo",
+                      "tags": [
+                        "tag1"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "meta": {
+                    "code": 401,
+                    "message": "expired token",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Error validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "meta": {
+                    "code": 422,
+                    "message": "invalid priority (low, medium, high)",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error in service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "meta": {
+                    "code": 500,
+                    "message": "failed to get task",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tasks/{id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Task"
+        ],
+        "summary": "Get a task by id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "04fe291e-7859-4485-b528-d027b1ec315d"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success get task by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseGetTaskByID"
+                },
+                "example": {
+                  "meta": {
+                    "code": 200,
+                    "message": "success",
+                    "pagination": null
+                  },
+                  "data": {
+                    "id": "04fe291e-7859-4485-b528-d027b1ec315d",
+                    "title": "Task 1",
+                    "description": "Description Task 1",
+                    "due_date": "2023-08-31 23:59:59",
+                    "priority": "high",
+                    "status": "todo",
+                    "tags": [
+                      "tag1"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "meta": {
+                    "code": 401,
+                    "message": "expired token",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "meta": {
+                    "code": 404,
+                    "message": "task not found",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Error validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "meta": {
+                    "code": 422,
+                    "message": "invalid uuid format",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error in service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "meta": {
+                    "code": 500,
+                    "message": "failed to get task",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Task"
+        ],
+        "summary": "Update a task by id with particular update schema",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "04fe291e-7859-4485-b528-d027b1ec315d"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestUpdateTask"
+              },
+              "example": {
+                "status": "in-progress"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success get task by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseUpdateTaskByID"
+                },
+                "example": {
+                  "meta": {
+                    "code": 200,
+                    "message": "success",
+                    "pagination": null
+                  },
+                  "data": {
+                    "id": "04fe291e-7859-4485-b528-d027b1ec315d",
+                    "title": "Task 1",
+                    "description": "Description Task 1",
+                    "due_date": "2023-08-31 23:59:59",
+                    "priority": "high",
+                    "status": "in-progress",
+                    "tags": [
+                      "tag1"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "meta": {
+                    "code": 401,
+                    "message": "expired token",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "meta": {
+                    "code": 404,
+                    "message": "task not found",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Error validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "meta": {
+                    "code": 422,
+                    "message": "invalid status (todo, in-progress, completed)",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error in service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "meta": {
+                    "code": 500,
+                    "message": "failed to udpate task",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Task"
+        ],
+        "summary": "Delete a task by id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "04fe291e-7859-4485-b528-d027b1ec315d"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success get task by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDeleteTaskByID"
+                },
+                "example": {
+                  "meta": {
+                    "code": 200,
+                    "message": "success",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "meta": {
+                    "code": 401,
+                    "message": "expired token",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "meta": {
+                    "code": 404,
+                    "message": "task not found",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Error validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "meta": {
+                    "code": 422,
+                    "message": "invalid uuid format",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error in service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "meta": {
+                    "code": 500,
+                    "message": "failed to delete task",
+                    "pagination": null
+                  },
+                  "data": null
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "format": "JWT"
+      }
+    },
+    "schemas": {
+      "Pagination": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "page": {
+            "type": "number",
+            "default": 1
+          },
+          "size": {
+            "type": "number",
+            "default": 10
+          },
+          "total_data": {
+            "type": "number"
+          },
+          "total_page": {
+            "type": "number"
+          }
+        }
+      },
+      "Meta": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "number"
+          },
+          "message": {
+            "type": "string"
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
+          }
+        }
+      },
+      "RegisterResponseData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "LoginResponseData": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string"
+          },
+          "access_token_exp": {
+            "type": "string"
+          }
+        }
+      },
+      "Task": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "due_date": {
+            "type": "string",
+            "format": "datetime",
+            "example": "2023-08-31 18:49:18"
+          },
+          "priority": {
+            "type": "string",
+            "default": "low",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "default": "todo",
+            "enum": [
+              "todo",
+              "in-progress",
+              "completed"
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "data": {
+            "example": null
+          }
+        }
+      },
+      "RegisterRequest": {
+        "type": "object",
+        "required": [
+          "name",
+          "email",
+          "password"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "RegisterResponse": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "data": {
+            "$ref":"#/components/schemas/RegisterResponseData"
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "data": {
+            "$ref":"#/components/schemas/LoginResponseData"
+          }
+        }
+      },
+      "LogoutResponse": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "data": null
+        }
+      },
+      "RequestNewTask": {
+        "type": "object",
+        "required": [
+          "title"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "due_date": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ResponseNewTask": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Task"
+          }
+        }
+      },
+      "ResponseGetTasks": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Task"
+            }
+          }
+        }
+      },
+      "ResponseGetTaskByID": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Task"
+          }
+        }
+      },
+      "RequestUpdateTask": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "due_date": {
+            "type": "string",
+            "nullable": true
+          },
+          "priority": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "tags": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ResponseUpdateTaskByID": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Task"
+          }
+        }
+      },
+      "ResponseDeleteTaskByID": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Task"
+          }
+        }
+      }
+    }
+  }
+}
