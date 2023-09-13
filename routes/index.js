@@ -21,7 +21,15 @@ router.group("/api/v1/health", (r) => {
 });
 
 // task router
-router.group("/api/v1/tasks", authorizeJWT, (r) => {
+router.group("/api/v1/tasks", (r) => {
+  r.post("/", createTask);
+  r.get("/", getTasks);
+  r.get("/:id", getTaskByID);
+  r.patch("/:id", updateTask);
+  r.delete("/:id", deleteTask);
+});
+
+router.group("/api/v2/tasks", authorizeJWT, (r) => {
   r.post("/", createTask);
   r.get("/", getTasks);
   r.get("/:id", getTaskByID);
